@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.yjkj.framework.rbac.cost.dao.CostDao">
+	<resultMap type="com.yjkj.framework.rbac.cost.model.Cost" id="costMap">
+	<association property="project" javaType="com.yjkj.framework.rbac.project.model.Project" column="p_id" select="com.yjkj.framework.rbac.project.dao.ProjectDao.informationLoadOne"></association>
+	</resultMap>
+	<select id="informationLoad" parameterType="java.util.HashMap"
+		resultMap="costMap">
+		SELECT
+		*
+		FROM
+		cost 
+		<where>
+			is_delete = '0'
+			<if test="cost.p_id != null and cost.p_id != ''">
+				AND p_id = #{cost.p_id}
+			</if>
+		</where>
+		ORDER BY
+		id
+		DESC
+		LIMIT
+		#{pager.offSet},#{pager.pageSize}
+	</select>
+	<select id="informationLoadAll"
+		resultMap="costMap">
+		SELECT
+		*
+		FROM
+		cost 
+		<where>
+			is_delete = '0'
+		</where>
+		ORDER BY
+		id
+		DESC
+	</select>
+	<select id="count" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		cost
+		<where>
+			is_delete = '0'
+			<if test="p_id != null and p_id != ''">
+				AND p_id = #{p_id}
+			</if>
+		</where>
+	</select>
+	<select id="informationLoadOne"  resultMap="costMap">
+		SELECT
+		*
+		FROM
+		cost
+		WHERE
+		id=#{id}
+	</select>
+
+
+	<delete id="informationDelete" >
+		UPDATE
+		cost
+		SET
+		is_delete = '1'
+		WHERE id=#{id}
+	</delete>
+
+
+	<insert id="informationAdd" parameterType="com.yjkj.framework.rbac.cost.model.Cost">
+		INSERT INTO
+		cost
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="p_id != null">
+				p_id,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="createtime != null">
+				createtime,
+			</if>
+			<if test="is_delete != null">
+				is_delete,
+			</if>
+			<if test="flag != null">
+				flag,
+			</if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="p_id != null">
+				#{p_id},
+			</if>
+			<if test="content != null">
+				#{content},
+			</if>
+			<if test="price != null">
+				#{price},
+			</if>
+			<if test="createtime != null">
+				#{createtime},
+			</if>
+			<if test="is_delete != null">
+				#{is_delete},
+			</if>
+			<if test="flag != null">
+				#{flag},
+			</if>
+		</trim>
+	</insert>
+	<update id="informationUpdate" parameterType="com.yjkj.framework.rbac.cost.model.Cost">
+		UPDATE
+		cost
+		<set>
+			<if test="p_id != null">
+				p_id=#{p_id},
+			</if>
+			<if test="content != null">
+				content=#{content},
+			</if>
+			<if test="price != null">
+				price=#{price},
+			</if>
+			<if test="createtime != null">
+				createtime=#{createtime},
+			</if>
+			<if test="is_delete != null">
+				is_delete=#{is_delete},
+			</if>
+			<if test="flag != null">
+				flag=#{flag},
+			</if>
+		</set>
+		WHERE id=#{id}
+	</update>
+</mapper>
